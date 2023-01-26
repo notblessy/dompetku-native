@@ -1,8 +1,10 @@
-import React, { useEffect, useReducer } from 'react';
-import useSWR from 'swr';
-import { createContext, useContext, useState, useCallback } from 'react';
+import React, { useEffect } from 'react';
 import * as SecureStore from 'expo-secure-store';
 
+import { createContext, useContext, useState, useCallback } from 'react';
+import { useToast } from "react-native-toast-notifications";
+
+import useSWR from 'swr';
 import api from '../utils/api';
 
 const AuthCtx = createContext({
@@ -16,15 +18,9 @@ async function store(key, value) {
   await SecureStore.setItemAsync(key, value);
 }
 
-async function getValueFor(key) {
-  let result = await SecureStore.getItemAsync(key);
-  if (result) {
-    return result
-  }
-  return null
-}
-
 export const AuthProvider = ({ children }) => {
+  const toast = useToast();
+  
   const [token, setToken] = useState('');
   const checkToken = async () => {
     try {
@@ -35,19 +31,12 @@ export const AuthProvider = ({ children }) => {
       console.log(error);
     }
   }
-
+  
   useEffect(() => {
     checkToken();
   }, []);
 
-  // const { data: user } = useSWR(() =>
-  //   token ? '/profile' : null
-  // );
-
-  const user = token ? {
-    id: 1,
-    name: "frederich"
-  } : null
+  const { data: user } = useSWR(token ? '/profile' : null);
 
   const [loading, setLoading] = useState(false);
 
@@ -55,20 +44,21 @@ export const AuthProvider = ({ children }) => {
     async (data) => {
       setLoading(true);
       try {
-        // const { data: res } = await api.post('/login', data);
-        const res = {
-          token: "asjfnsknfkds",
-          success: true
-        }
+        const { data: res } = await api.post('/login', data);
 
         if (res.token && res.success) {
           await store("accessToken", res.token)
           setToken(res.token)
         } else {
-          console.log(res.message)
+          toast.show(res.message, {
+            type: "danger",
+          });
         }
       } catch (error) {
         console.log(error)
+        toast.show(error, {
+          type: "danger",
+        });
       } finally {
         setLoading(false);
       }
@@ -82,6 +72,9 @@ export const AuthProvider = ({ children }) => {
         await SecureStore.deleteItemAsync("accessToken");
       } catch (error) {
         console.log(error);
+        toast.show(error, {
+          type: "danger",
+        });
       } finally {
         setToken(null);
         setLoading(false);
