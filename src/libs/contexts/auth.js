@@ -31,10 +31,10 @@ export const AuthProvider = ({ children }) => {
       console.log(error);
     }
   }
-  
+
   useEffect(() => {
     checkToken();
-  }, []);
+  }, [checkToken]);
 
   const { data: user } = useSWR(token ? '/profile' : null);
 
@@ -56,9 +56,6 @@ export const AuthProvider = ({ children }) => {
         }
       } catch (error) {
         console.log(error)
-        toast.show(error, {
-          type: "danger",
-        });
       } finally {
         setLoading(false);
       }
@@ -72,9 +69,6 @@ export const AuthProvider = ({ children }) => {
         await SecureStore.deleteItemAsync("accessToken");
       } catch (error) {
         console.log(error);
-        toast.show(error, {
-          type: "danger",
-        });
       } finally {
         setToken(null);
         setLoading(false);

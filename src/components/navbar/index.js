@@ -9,6 +9,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import { SignInScreen, SignUpScreen } from '../../screens/auth';
+import { WalletScreen } from '../../screens/wallet';
 
 function HomeScreen({ navigation }) {
   return (
@@ -16,19 +17,7 @@ function HomeScreen({ navigation }) {
       <Text>Home Screen</Text>
       <Button
         title="Go to Budgets"
-        onPress={() => navigation.navigate('Budgets')}
-      />
-    </View>
-  );
-}
-
-function BudgetsScreen({ navigation }) {
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Budgets Screen</Text>
-      <Button
-        title="Go to Budgets... again"
-        onPress={() => navigation.goBack()}
+        onPress={() => navigation.navigate('Wallet')}
       />
     </View>
   );
@@ -55,7 +44,7 @@ function HomeTab() {
   return (
     <Stack.Navigator>
       <Stack.Screen name="Home" component={HomeScreen} />
-      <Stack.Screen name="Budgets" component={BudgetsScreen} />
+      <Stack.Screen name="Wallet" component={WalletScreen} />
     </Stack.Navigator>
   )
 }
@@ -78,8 +67,8 @@ const NavBar = ({value, setValue, placeholder, secured}) => {
               iconName = focused
                 ? 'home'
                 : 'home-outline';
-            } else if (route.name === 'Budgets') {
-              iconName = focused ? 'ios-list' : 'ios-list-outline';
+            } else if (route.name === 'Wallet') {
+              iconName = focused ? 'wallet' : 'wallet-outline';
             } else if (route.name === 'Account') {
               iconName = focused ? 'person-circle' : 'person-circle-outline';
             }
@@ -87,12 +76,12 @@ const NavBar = ({value, setValue, placeholder, secured}) => {
             // You can return any component that you like here!
             return <Ionicons name={iconName} size={size} color={color} />;
           },
-          tabBarActiveTintColor: 'tomato',
+          tabBarActiveTintColor: '#534335',
           tabBarInactiveTintColor: 'gray',
         })}
       >
         <Tab.Screen name="Home" component={HomeTab} options={{ headerShown: false }} />
-        <Tab.Screen name="Budgets" component={BudgetsScreen} />
+        <Tab.Screen name="Wallet" component={WalletScreen} options={{ headerShown: false }} />
         <Tab.Screen name="Account" component={Account} />
       </Tab.Navigator>
     :
