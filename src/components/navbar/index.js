@@ -11,7 +11,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { SignInScreen, SignUpScreen } from '../../screens/auth';
 import { WalletScreen } from '../../screens/wallet';
 
-function HomeScreen({ navigation }) {
+function HomeTab({ navigation }) {
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <Text>Home Screen</Text>
@@ -38,15 +38,6 @@ function Account({ navigation }) {
       />
     </View>
   );
-}
-
-function HomeTab() {
-  return (
-    <Stack.Navigator>
-      <Stack.Screen name="Home" component={HomeScreen} />
-      <Stack.Screen name="Wallet" component={WalletScreen} />
-    </Stack.Navigator>
-  )
 }
 
 const Stack = createNativeStackNavigator();

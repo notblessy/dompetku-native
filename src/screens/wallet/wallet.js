@@ -1,11 +1,79 @@
-import { ScrollView, StyleSheet, Text, View } from "react-native"
+import { useState } from "react";
+import { Dimensions, ScrollView, StyleSheet, Text, View } from "react-native"
+import { LineChart } from "react-native-chart-kit";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 
 const WalletScreen = () => {
+  const [chartParentWidth, setChartParentWidth] = useState(0);
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Wallets</Text>
+      <View onLayout={({ nativeEvent }) => setChartParentWidth(nativeEvent.layout.width)}>
+        <LineChart
+          data={{
+            labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep"],
+            datasets: [
+              {
+                data: [
+                  Math.random() * 50,
+                  Math.random() * 23,
+                  Math.random() * 30,
+                  Math.random() * 40,
+                  Math.random() * 55,
+                  Math.random() * 55,
+                  Math.random() * 61,
+                  Math.random() * 24,
+                ],
+                strokeWidth: 2,
+                color: (opacity) => `rgba(147,118,93, 80)`
+              },
+              {
+                data: [5,22,36,27,8,40,33, 20],
+                strokeWidth: 2,
+                color: (opacity) => `rgba(83,131,105, 80)`
+              },
+              {
+                data: [26,20,5,20,24,2,33, 33],
+                strokeWidth: 2,
+                color: (opacity) => `rgba(88,87,130, 80)`
+              }
+            ],
+            legend: ["BCA", "DBS", "CASH"]
+          }
+        
+        }
+          width={chartParentWidth - 30}
+          height={220}
+          yAxisInterval={1}
+          withVerticalLines={false}
+          withHorizontalLines={true}
+          fromZero
+          chartConfig={{
+            backgroundColor: "#F7F4F2",
+            backgroundGradientFrom: "#F7F4F2",
+            backgroundGradientTo: "#F7F4F2",
+            useShadowColorFromDataset: true,
+            decimalPlaces: 0,
+            color: (opacity = 1) => `rgba(47,38,30, ${opacity})`,
+            labelColor: (opacity = 1) => `rgba(47,38,30, ${opacity})`,
+            style: {
+              borderRadius: 20,
+            },
+            propsForDots: {
+              r: "4",
+              strokeWidth: "6",
+            }
+          }}
+          bezier
+          style={{
+            borderRadius: 5,
+            paddingTop: 10,
+            paddingRight: 40,
+          }}
+        />
+      </View>
       <View style={styles.card}>
         <Text style={styles.cardTitle}>Rp. 53043995</Text>
         <Text style={styles.cardText}>Total Wealth</Text>
@@ -37,7 +105,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   card: {
-    backgroundColor: '#534335',
+    backgroundColor: '#538369',
     borderRadius: '5px',
     marginVertical: 10
   },
@@ -57,7 +125,7 @@ const styles = StyleSheet.create({
   listWrapper: {
     flex: 1,
     flexDirection: 'row',
-    backgroundColor: '#e7e0da',
+    backgroundColor: '#efe6e6',
     borderRadius: '5px',
   },
   icon: {

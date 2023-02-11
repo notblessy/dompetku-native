@@ -20,6 +20,9 @@ async function store(key, value) {
 
 export const AuthProvider = ({ children }) => {
   const toast = useToast();
+  console.log(toast)
+
+  const [message, setMessage] = useState(null)
   
   const [token, setToken] = useState('');
   const checkToken = async () => {
@@ -34,7 +37,13 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     checkToken();
-  }, [checkToken]);
+    if (message) {
+      toast.show(message, {
+        type: 'danger'
+      })
+      setMessage(null)
+    }
+  }, [checkToken, toast]);
 
   const { data: user } = useSWR(token ? '/profile' : null);
 
@@ -50,9 +59,7 @@ export const AuthProvider = ({ children }) => {
           await store("accessToken", res.token)
           setToken(res.token)
         } else {
-          toast.show(res.message, {
-            type: "danger",
-          });
+          setMessage(res.message)
         }
       } catch (error) {
         console.log(error)
