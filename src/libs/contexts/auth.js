@@ -20,7 +20,6 @@ async function store(key, value) {
 
 export const AuthProvider = ({ children }) => {
   const toast = useToast();
-  console.log(toast)
 
   const [message, setMessage] = useState(null)
   
@@ -53,13 +52,17 @@ export const AuthProvider = ({ children }) => {
     async (data) => {
       setLoading(true);
       try {
-        const { data: res } = await api.post('/login', data);
-
-        if (res.token && res.success) {
-          await store("accessToken", res.token)
-          setToken(res.token)
+        if (!data.email || !data.password) {
+          setMessage("Email or password cannot be empty!")
         } else {
-          setMessage(res.message)
+          const { data: res } = await api.post('/login', data);
+
+          if (res.token && res.success) {
+            await store("accessToken", res.token)
+            setToken(res.token)
+          } else {
+            setMessage(res.message)
+          }
         }
       } catch (error) {
         console.log(error)

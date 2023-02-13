@@ -84,18 +84,18 @@ const WalletScreen = () => {
           />
         </View>
         <View style={styles.card}>
-          <Text style={styles.cardTitle}>Rp. {totalWealth.toLocaleString()}</Text>
+          <Text style={styles.cardTitle}>Rp. {totalWealth?.toLocaleString()}</Text>
           <Text style={styles.cardText}>Total Wealth</Text>
         </View>
         <View>
         {
             wallets?.data?.map((w) => {
               return (
-                <View style={styles.listWrapper}>
+                <View key={w.id} style={styles.listWrapper}>
                   <Ionicons style={styles.icon} name="card" size="45px"/>
                   <View>
                     <Text style={styles.listItemTitle}>{w.name}</Text>
-                    <Text style={styles.listItemDate}>{Moment(w.created_at).format('DD-MM-YYYY')}</Text>
+                    <Text style={styles.listItemDate}>{Moment(w.created_at).format('DD MMM YYYY')}</Text>
                   </View>
                   <Text style={styles.listItemText}>Rp. {w.initial_balance.toLocaleString()}</Text>
                 </View>

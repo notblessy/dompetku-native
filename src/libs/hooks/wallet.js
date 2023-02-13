@@ -12,9 +12,9 @@ export const useWallets = () => {
   const { data = [], error, isValidating } = useSWR('/wallets');
 
   useEffect(() => {
-    if (data) {
-      toast.show(data.message, {
-        type: data.type
+    if (message) {
+      toast.show(message.message, {
+        type: message.type
       })
       setMessage(null)
     }
