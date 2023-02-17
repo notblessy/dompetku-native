@@ -1,19 +1,54 @@
-import { useState } from "react";
-import { ScrollView, StyleSheet, Text, View } from "react-native"
+import { useEffect, useState } from "react";
+import { Keyboard, ScrollView, StyleSheet, Text, View } from "react-native"
 import { LineChart } from "react-native-chart-kit";
 import { useWallets } from "../../libs/hooks/wallet";
 
 import Moment from 'moment';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import CustomButton from '../../components/custom-button';
+import Modal from "react-native-modal";
+import CustomInput from "../../components/custom-input";
 
 
 const WalletScreen = () => {
   const { data: wallets } = useWallets();
   const [chartParentWidth, setChartParentWidth] = useState(0);
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
   const totalWealth = wallets?.data?.reduce((w, a) => {
     return w + a.initial_balance
   }, 0);
+
+
+  const toggleModal = () => {
+    if (isKeyboardVisible) {
+      Keyboard.dismiss()
+    } else {
+      setModalVisible(!isModalVisible);
+    }
+  };
+
+  
+ useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => {
+        setKeyboardVisible(true); // or some other action
+      }
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => {
+        setKeyboardVisible(false); // or some other action
+      }
+    );
+
+    return () => {
+      keyboardDidHideListener.remove();
+      keyboardDidShowListener.remove();
+    };
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -103,7 +138,28 @@ const WalletScreen = () => {
             })
         }
         </View>
+        <View style={styles.buttonWrapper}>
+          <CustomButton  text="Add Wallet" type="PRIMARY_SM" onPress={toggleModal} />
+        </View>
       </ScrollView>
+      <View style={{ flex: 1 }}>
+        <Modal
+          style={styles.modalWrapper}
+          isVisible={isModalVisible}
+          onBackdropPress={toggleModal}
+          avoidKeyboard
+        >
+          <View style={styles.modalContainer}>
+            <Text style={styles.title_SM}>Add Wallet</Text>
+            <View style={styles.root}>
+              <CustomInput placeholder="Wallet Name" />
+              <CustomInput placeholder="Amount" type="numeric" />
+              <CustomInput placeholder="Category" />
+              <CustomButton text="Add Wallet" type="PRIMARY" onPress={() => {}}/>
+            </View>
+          </View>
+        </Modal>
+      </View>
     </View>
   )
 }
@@ -117,6 +173,11 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: '50%',
+    color: '#231c16',
+    marginBottom: 10,
+  },
+  title_SM: {
+    fontSize: '30%',
     color: '#231c16',
     marginBottom: 10,
   },
@@ -167,6 +228,22 @@ const styles = StyleSheet.create({
     fontSize: '14px',
     paddingTop: 17,
     paddingHorizontal: 15,
+  },
+  buttonWrapper: {
+    flex: 1,
+    alignItems:'center',
+    marginBottom: 50
+  },
+  modalWrapper: {
+    flex: 1,
+    margin: 0,
+    justifyContent: 'flex-end',
+  },
+  modalContainer: {
+    backgroundColor: '#F7F4F2',
+
+    width: '100%',
+    padding: 10,
   }
 })
 

@@ -34,6 +34,19 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     flex: 1,
   },
+  container_PRIMARY_SM: {
+    backgroundColor: '#836953',
+    width: '60%',
+    
+    padding: 10,
+    marginVertical: 5,
+
+    alignItems: 'center',
+    borderRadius: 5,
+  },
+  text_PRIMARY_SM: {
+    color: 'white',
+  },
 })
 
 export default CustomButton;
