@@ -1,20 +1,28 @@
 import { useEffect, useState } from "react";
 import { Keyboard, ScrollView, StyleSheet, Text, View } from "react-native"
 import { LineChart } from "react-native-chart-kit";
+import {Picker} from '@react-native-picker/picker';
 import { useWallets } from "../../libs/hooks/wallet";
 
 import Moment from 'moment';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import DropDownPicker from 'react-native-dropdown-picker';
+
 import CustomButton from '../../components/custom-button';
 import Modal from "react-native-modal";
 import CustomInput from "../../components/custom-input";
-
 
 const WalletScreen = () => {
   const { data: wallets } = useWallets();
   const [chartParentWidth, setChartParentWidth] = useState(0);
   const [isModalVisible, setModalVisible] = useState(false);
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState(null);
+  const [items, setItems] = useState([
+    {label: 'Apple', value: 'apple'},
+    {label: 'Banana', value: 'banana'}
+  ]);
 
   const totalWealth = wallets?.data?.reduce((w, a) => {
     return w + a.initial_balance
@@ -154,7 +162,25 @@ const WalletScreen = () => {
             <View style={styles.root}>
               <CustomInput placeholder="Wallet Name" />
               <CustomInput placeholder="Amount" type="numeric" />
-              <CustomInput placeholder="Category" />
+              <DropDownPicker
+                style={styles.dropDownPicker}
+                placeholderStyle={{
+                  color: '#231c16'
+                }}
+                dropDownContainerStyle={{
+                  borderColor: '#f7f4f2',
+                  borderWidth: 1,
+                  borderRadius: 5,
+                }}
+                placeholder="Select Currency"
+                open={open}
+                value={value}
+                items={items}
+                setOpen={setOpen}
+                setValue={setValue}
+                setItems={setItems}
+              />
+              <View style={styles.gap}></View>
               <CustomButton text="Add Wallet" type="PRIMARY" onPress={() => {}}/>
             </View>
           </View>
@@ -165,6 +191,9 @@ const WalletScreen = () => {
 }
 
 const styles = StyleSheet.create({
+  gap: {
+    marginBottom: 30,
+  },
   container: {
     flex: 1,
     backgroundColor: '#F7F4F2',
@@ -179,7 +208,8 @@ const styles = StyleSheet.create({
   title_SM: {
     fontSize: '30%',
     color: '#231c16',
-    marginBottom: 10,
+    marginTop: 10,
+    marginBottom: 15,
   },
   card: {
     backgroundColor: '#538369',
@@ -244,6 +274,12 @@ const styles = StyleSheet.create({
 
     width: '100%',
     padding: 10,
+  },
+
+  dropDownPicker: {
+    borderColor: '#f7f4f2',
+    borderWidth: 1,
+    borderRadius: 5,
   }
 })
 
