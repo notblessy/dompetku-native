@@ -8,6 +8,7 @@ export const useWallets = () => {
 
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(null)
+  const [success, setSuccess] = useState(true)
 
   const { data = [], error, isValidating } = useSWR('/wallets');
 
@@ -31,13 +32,16 @@ export const useWallets = () => {
           toast.show("New wallet successfully added!", {
             type: "success"
           })
+          setSuccess(true)
         } else {
           toast.show("Error while adding wallet!", {
             type: "danger"
           })
+          setSuccess(false)
         }
       } catch (error) {
         toast('error', error);
+        setSuccess(false)
       } finally {
         setLoading(false);
       }
@@ -78,5 +82,6 @@ export const useWallets = () => {
     loading: (!error && !data) || isValidating || loading,
     onAdd,
     onDelete,
+    success,
   };
 };

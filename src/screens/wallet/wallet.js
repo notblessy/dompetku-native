@@ -14,32 +14,32 @@ import CustomInput from "../../components/custom-input";
 import { useCurrency } from "../../libs/hooks/currency";
 
 const WalletScreen = ({ navigation }) => {
-  const { data: wallets, onAdd, loading } = useWallets();
+  const { data: wallets, onAdd, loading, success } = useWallets();
   const { data: currencies } = useCurrency();
 
   const [chartParentWidth, setChartParentWidth] = useState(0);
   const [isModalVisible, setModalVisible] = useState(false);
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+  const [openDropDown, setOpenDropDown] = useState(false);
+
   const [name, setName] = useState(null)
   const [initial_balance, setInitialBalance] = useState(0)
   const [currency_id, setCurrency] = useState(null)
 
-  const [open, setOpen] = useState(false);
-  const [items, setItems] = useState([
-    {label: 'Apple', value: 2},
-    {label: 'Banana', value: 1}
-  ]);
-
   const totalWealth = wallets?.data?.reduce((w, a) => {
     return w + a.initial_balance
   }, 0);
-
 
   const toggleModal = () => {
     if (isKeyboardVisible) {
       Keyboard.dismiss()
     } else {
       setModalVisible(!isModalVisible);
+      if (success) {
+        setName(null)
+        setInitialBalance(0)
+        setCurrency(null)
+      }
     }
   };
 
@@ -183,15 +183,14 @@ const WalletScreen = ({ navigation }) => {
                   borderRadius: 5,
                 }}
                 placeholder="Select Currency"
-                open={open}
-                setOpen={setOpen}
+                open={openDropDown}
+                setOpen={setOpenDropDown}
                 items={currencies?.data ? currencies?.data.map((c) => {
                   return {
                     label: c.name,
                     value: c.id
                   }
                 }) : null}
-                setItems={setItems}
                 value={currency_id}
                 setValue={setCurrency}
               />
