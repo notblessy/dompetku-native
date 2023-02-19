@@ -10,6 +10,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import { SignInScreen, SignUpScreen } from '../../screens/auth';
 import { WalletScreen } from '../../screens/wallet';
+import { BudgetScreen } from '../../screens/budget';
 
 function HomeTab({ navigation }) {
   return (
@@ -60,6 +61,8 @@ const NavBar = ({value, setValue, placeholder, secured}) => {
                 : 'home-outline';
             } else if (route.name === 'Wallet') {
               iconName = focused ? 'wallet' : 'wallet-outline';
+            } else if (route.name === 'Budget') {
+              iconName = focused ? 'server' : 'server-outline';
             } else if (route.name === 'Account') {
               iconName = focused ? 'person-circle' : 'person-circle-outline';
             }
@@ -73,6 +76,7 @@ const NavBar = ({value, setValue, placeholder, secured}) => {
       >
         <Tab.Screen name="Home" component={HomeTab} options={{ headerShown: false }} />
         <Tab.Screen name="Wallet" component={WalletScreen} options={{ headerShown: false }} />
+        <Tab.Screen name="Budget" component={BudgetScreen} options={{ headerShown: false }} />
         <Tab.Screen name="Account" component={Account} />
       </Tab.Navigator>
     :

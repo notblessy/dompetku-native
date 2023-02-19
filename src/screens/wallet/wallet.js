@@ -72,7 +72,7 @@ const WalletScreen = ({ navigation }) => {
     <View style={styles.container}>
       <Text style={styles.title}>Wallets</Text>
       <ScrollView>
-        <View onLayout={({ nativeEvent }) => setChartParentWidth(nativeEvent.layout.width)}>
+        {/* <View onLayout={({ nativeEvent }) => setChartParentWidth(nativeEvent.layout.width)}>
           <LineChart
             data={{
               labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep"],
@@ -135,7 +135,7 @@ const WalletScreen = ({ navigation }) => {
               paddingRight: 40,
             }}
           />
-        </View>
+        </View> */}
         <View style={styles.card}>
           <Text style={styles.cardTitle}>Rp. {totalWealth?.toLocaleString()}</Text>
           <Text style={styles.cardText}>Total Wealth</Text>
@@ -215,19 +215,19 @@ const styles = StyleSheet.create({
     paddingHorizontal: 30,
   },
   title: {
-    fontSize: '50%',
+    fontSize: 50,
     color: '#231c16',
     marginBottom: 10,
   },
   title_SM: {
-    fontSize: '30%',
+    fontSize: 30,
     color: '#231c16',
     marginTop: 10,
     marginBottom: 15,
   },
   card: {
     backgroundColor: '#538369',
-    borderRadius: '5px',
+    borderRadius: 5,
     marginVertical: 10
   },
   cardTitle: {
@@ -247,7 +247,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     backgroundColor: '#efe6e6',
-    borderRadius: '5px',
+    borderRadius: 5,
     marginBottom: 10,
   },
   icon: {
@@ -257,19 +257,19 @@ const styles = StyleSheet.create({
   },
   listItemTitle: {
     color: '#3b2f25',
-    fontSize: '12px',
+    fontSize: 12,
     fontWeight: 'bold',
     paddingTop: 13,
   },
   listItemDate: {
     color: '#3b2f25',
-    fontSize: '10px'
+    fontSize: 10
   },
   listItemText: {
     textAlign: 'right',
     flex: 1,
     color: '#3b2f25',
-    fontSize: '14px',
+    fontSize: 14,
     paddingTop: 17,
     paddingHorizontal: 15,
   },
