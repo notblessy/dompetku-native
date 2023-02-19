@@ -1,4 +1,4 @@
-import useSWR from 'swr';
+import useSWR, { mutate } from 'swr';
 import { useCallback, useEffect, useState } from 'react';
 import api from '../utils/api';
 import { useToast } from 'react-native-toast-notifications';
@@ -27,14 +27,13 @@ export const useWallets = () => {
         const { data: res } = await api.post('/wallets', data);
 
         if (res.success) {
-          setMessage({
-            type: "success", 
-            message: "Wallet saved!"
+          mutate('/wallets');
+          toast.show("New wallet successfully added!", {
+            type: "success"
           })
         } else {
-          setMessage({
-            type: "danger", 
-            message: "Something went wrong!"
+          toast.show("Error while adding wallet!", {
+            type: "danger"
           })
         }
       } catch (error) {

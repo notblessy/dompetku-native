@@ -12,16 +12,19 @@ import CustomButton from '../../components/custom-button';
 import Modal from "react-native-modal";
 import CustomInput from "../../components/custom-input";
 
-const WalletScreen = () => {
-  const { data: wallets } = useWallets();
+const WalletScreen = ({ navigation }) => {
+  const { data: wallets, onAdd, loading } = useWallets();
   const [chartParentWidth, setChartParentWidth] = useState(0);
   const [isModalVisible, setModalVisible] = useState(false);
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+  const [name, setName] = useState(null)
+  const [initial_balance, setInitialBalance] = useState(0)
+  const [currency_id, setCurrency] = useState(null)
+
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState(null);
   const [items, setItems] = useState([
-    {label: 'Apple', value: 'apple'},
-    {label: 'Banana', value: 'banana'}
+    {label: 'Apple', value: 2},
+    {label: 'Banana', value: 1}
   ]);
 
   const totalWealth = wallets?.data?.reduce((w, a) => {
@@ -37,8 +40,12 @@ const WalletScreen = () => {
     }
   };
 
-  
- useEffect(() => {
+  const handleSubmit = () => {
+    onAdd({name, initial_balance, currency_id})
+    setModalVisible(!isModalVisible)
+  }
+
+  useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
       'keyboardDidShow',
       () => {
@@ -160,8 +167,8 @@ const WalletScreen = () => {
           <View style={styles.modalContainer}>
             <Text style={styles.title_SM}>Add Wallet</Text>
             <View style={styles.root}>
-              <CustomInput placeholder="Wallet Name" />
-              <CustomInput placeholder="Amount" type="numeric" />
+              <CustomInput placeholder="Wallet Name" value={name} setValue={setName} />
+              <CustomInput placeholder="Amount" type="numeric" value={initial_balance} setValue={setInitialBalance} />
               <DropDownPicker
                 style={styles.dropDownPicker}
                 placeholderStyle={{
@@ -174,14 +181,14 @@ const WalletScreen = () => {
                 }}
                 placeholder="Select Currency"
                 open={open}
-                value={value}
-                items={items}
                 setOpen={setOpen}
-                setValue={setValue}
+                items={items}
                 setItems={setItems}
+                value={currency_id}
+                setValue={setCurrency}
               />
               <View style={styles.gap}></View>
-              <CustomButton text="Add Wallet" type="PRIMARY" onPress={() => {}}/>
+              <CustomButton text="Add Wallet" type="PRIMARY" isLoading={loading} onPress={handleSubmit}/>
             </View>
           </View>
         </Modal>
@@ -274,6 +281,7 @@ const styles = StyleSheet.create({
 
     width: '100%',
     padding: 10,
+    paddingBottom: 50,
   },
 
   dropDownPicker: {

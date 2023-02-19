@@ -1,11 +1,17 @@
-import { StyleSheet, Text, TouchableOpacity } from "react-native"
+import { ActivityIndicator, StyleSheet, Text, TouchableOpacity } from "react-native"
 
 
-const CustomButton = ({onPress, text, type}) => {
+const CustomButton = ({onPress, text, type, isLoading}) => {
   const buttonType = type ? type : "PRIMARY"
+  const loading = isLoading ? isLoading : false
   return (
     <TouchableOpacity onPress={onPress} style={[styles.container, styles[`container_${buttonType}`]]}>
-      <Text style={[styles.text, styles[`text_${buttonType}`]]}>{text}</Text>
+      {
+        isLoading ?
+          <ActivityIndicator color="white" />
+        :
+          <Text style={[styles.text, styles[`text_${buttonType}`]]}>{text}</Text>
+      }
     </TouchableOpacity>
   )
 }
