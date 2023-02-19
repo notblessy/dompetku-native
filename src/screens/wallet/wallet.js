@@ -11,9 +11,12 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import CustomButton from '../../components/custom-button';
 import Modal from "react-native-modal";
 import CustomInput from "../../components/custom-input";
+import { useCurrency } from "../../libs/hooks/currency";
 
 const WalletScreen = ({ navigation }) => {
   const { data: wallets, onAdd, loading } = useWallets();
+  const { data: currencies } = useCurrency();
+
   const [chartParentWidth, setChartParentWidth] = useState(0);
   const [isModalVisible, setModalVisible] = useState(false);
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
@@ -182,7 +185,12 @@ const WalletScreen = ({ navigation }) => {
                 placeholder="Select Currency"
                 open={open}
                 setOpen={setOpen}
-                items={items}
+                items={currencies?.data ? currencies?.data.map((c) => {
+                  return {
+                    label: c.name,
+                    value: c.id
+                  }
+                }) : null}
                 setItems={setItems}
                 value={currency_id}
                 setValue={setCurrency}
