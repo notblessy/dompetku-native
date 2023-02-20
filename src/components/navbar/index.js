@@ -52,6 +52,14 @@ const NavBar = ({value, setValue, placeholder, secured}) => {
     {user ?
        <Tab.Navigator
         screenOptions={({ route }) => ({
+          tabBarStyle: {
+            backgroundColor: '#f7f4f2',
+            height: 60,
+            paddingTop: 10
+          },
+          tabBarItemStyle: {
+            marginBottom: 10
+          },
           tabBarIcon: ({ focused, color, size }) => {
             let iconName;
 
