@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 
 const LinearProgress = ({value}) => {
   let bgColor = ''
-  if (value < 30) {
+  if (value > 0 && value < 30) {
     bgColor = '#3D426B'
   } else if (value >= 30 && value < 50 ) {
     bgColor = '#538369'
@@ -12,7 +12,7 @@ const LinearProgress = ({value}) => {
   } else if (value >= 80 && value < 100) {
     bgColor = '#ff5747'
   } else {
-    bgColor = '#538369'
+    bgColor = '#d8ccc2'
   }
 
   return (

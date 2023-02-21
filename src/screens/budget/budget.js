@@ -1,71 +1,79 @@
 import { ScrollView, StyleSheet, Text, View } from "react-native"
+import CustomButton from "../../components/custom-button";
 import LinearProgress from "../../components/linear-progress"
+import { useBudgets } from "../../libs/hooks/budget";
 
 const BudgetScreen = ({ navigation }) => {
- 
+  const { data: budgets } = useBudgets()
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Budgets</Text>
       <ScrollView>
-        <View style={styles.progressContainer}>
-          <View style={styles.budgetTextWrapper}>
-            <View>
-              <Text style={styles.budgetName}>Home</Text>
-              <Text style={styles.budgetLeftOut}>left out IDR 1293849</Text>
-            </View>
-            <View style={styles.budgetAmountWrapper}>
-              <Text style={styles.budgetAmount}>IDR 2.000.000</Text>
-            </View>
-          </View>
-          <View>
-            <LinearProgress value={89} />
-          </View>
-        </View>
-        <View style={styles.progressContainer}>
-          <View style={styles.budgetTextWrapper}>
-            <View>
-              <Text style={styles.budgetName}>Food & Drink</Text>
-              <Text style={styles.budgetLeftOut}>left out IDR 1293849</Text>
-            </View>
-            <View style={styles.budgetAmountWrapper}>
-              <Text style={styles.budgetAmount}>IDR 1.000.000</Text>
-            </View>
-          </View>
-          <View>
-            <LinearProgress value={33} />
-          </View>
-        </View>
-        <View style={styles.progressContainer}>
-          <View style={styles.budgetTextWrapper}>
-            <View>
-              <Text style={styles.budgetName}>Internet</Text>
-              <Text style={styles.budgetLeftOut}>left out IDR 1293849</Text>
-            </View>
-            <View style={styles.budgetAmountWrapper}>
-              <Text style={styles.budgetAmount}>IDR 800.000</Text>
-            </View>
-          </View>
-          <View>
-            <LinearProgress value={78} />
-          </View>
-        </View>
-        <View style={styles.progressContainer}>
-          <View style={styles.budgetTextWrapper}>
-            <View>
-              <Text style={styles.budgetName}>Health Care</Text>
-              <Text style={styles.budgetLeftOut}>left out IDR 1293849</Text>
-            </View>
-            <View style={styles.budgetAmountWrapper}>
-              <Text style={styles.budgetAmount}>IDR 800.000</Text>
-            </View>
-          </View>
-          <View>
-            <LinearProgress value={25} />
-          </View>
+        {
+          budgets?.data ? budgets?.data.map((b) => {
+            return (
+              <View style={styles.progressContainer}>
+                <View style={styles.budgetTextWrapper}>
+                  <View>
+                    <Text style={styles.budgetName}>{b.name}</Text>
+                    <Text style={styles.budgetLeftOut}>left out IDR {b.left_out}</Text>
+                  </View>
+                  <View style={styles.budgetAmountWrapper}>
+                    <Text style={styles.budgetAmount}>IDR {b.amount.toLocaleString()}</Text>
+                  </View>
+                </View>
+                <View>
+                  <LinearProgress value={b.progress} />
+                </View>
+              </View>
+            )
+          }) : null
+        }
+        <View style={styles.buttonWrapper}>
+          <CustomButton  text="Add Wallet" type="PRIMARY_SM" onPress="" />
         </View>
       </ScrollView>
-    
+      <View style={{ flex: 1 }}>
+        <Modal
+          style={styles.modalWrapper}
+          isVisible={isModalVisible}
+          onBackdropPress={toggleModal}
+          avoidKeyboard
+        >
+          <View style={styles.modalContainer}>
+            <Text style={styles.title_SM}>Add Wallet</Text>
+            <View style={styles.root}>
+              <CustomInput placeholder="Wallet Name" value={name} setValue={setName} />
+              <CustomInput placeholder="Amount" type="numeric" value={initial_balance} setValue={setInitialBalance} />
+              <DropDownPicker
+                style={styles.dropDownPicker}
+                placeholderStyle={{
+                  color: '#231c16'
+                }}
+                dropDownContainerStyle={{
+                  borderColor: '#f7f4f2',
+                  borderWidth: 1,
+                  borderRadius: 5,
+                }}
+                placeholder="Select Currency"
+                open={openDropDown}
+                setOpen={setOpenDropDown}
+                items={currencies?.data ? currencies?.data.map((c) => {
+                  return {
+                    label: c.name,
+                    value: c.id
+                  }
+                }) : null}
+                value={currency_id}
+                setValue={setCurrency}
+              />
+              <View style={styles.gap}></View>
+              <CustomButton text="Add Wallet" type="PRIMARY" isLoading={loading} onPress={handleSubmit}/>
+            </View>
+          </View>
+        </Modal>
+      </View>
     </View>
   )
 }
@@ -114,6 +122,29 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 16
   },
+  buttonWrapper: {
+    flex: 1,
+    alignItems:'center',
+    marginBottom: 50
+  },
+  modalWrapper: {
+    flex: 1,
+    margin: 0,
+    justifyContent: 'flex-end',
+  },
+  modalContainer: {
+    backgroundColor: '#F7F4F2',
+
+    width: '100%',
+    padding: 10,
+    paddingBottom: 50,
+  },
+
+  dropDownPicker: {
+    borderColor: '#f7f4f2',
+    borderWidth: 1,
+    borderRadius: 5,
+  }
 })
 
 export default BudgetScreen
