@@ -5,11 +5,11 @@ const LinearProgress = ({value}) => {
   let bgColor = ''
   if (value > 0 && value < 30) {
     bgColor = '#3D426B'
-  } else if (value >= 30 && value < 50 ) {
+  } else if (value >= 30 && value < 50) {
     bgColor = '#538369'
   } else if (value >= 50 && value < 80) {
     bgColor = '#ffb347'
-  } else if (value >= 80 && value < 100) {
+  } else if (value >= 80) {
     bgColor = '#ff5747'
   } else {
     bgColor = '#d8ccc2'

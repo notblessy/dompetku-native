@@ -54,11 +54,11 @@ const NavBar = ({value, setValue, placeholder, secured}) => {
         screenOptions={({ route }) => ({
           tabBarStyle: {
             backgroundColor: '#f7f4f2',
-            height: 60,
+            height: 105,
             paddingTop: 10
           },
           tabBarItemStyle: {
-            marginBottom: 10
+            marginBottom: 20
           },
           tabBarIcon: ({ focused, color, size }) => {
             let iconName;

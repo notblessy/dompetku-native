@@ -1,10 +1,59 @@
-import { ScrollView, StyleSheet, Text, View } from "react-native"
+import { useEffect, useState } from "react";
+import { Keyboard, ScrollView, StyleSheet, Text, View } from "react-native"
 import CustomButton from "../../components/custom-button";
+import CustomInput from "../../components/custom-input";
 import LinearProgress from "../../components/linear-progress"
+import DropDownPicker from 'react-native-dropdown-picker';
+import Modal from "react-native-modal";
+
 import { useBudgets } from "../../libs/hooks/budget";
+import { useCurrency } from "../../libs/hooks/currency";
+import { useWallets } from "../../libs/hooks/wallet";
 
 const BudgetScreen = ({ navigation }) => {
-  const { data: budgets } = useBudgets()
+  const { data: budgets, loading, success } = useBudgets();
+  const { data: wallets } = useWallets();
+  const { data: currencies } = useCurrency();
+
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+
+  const [openCurrency, setOpenCurrency] = useState(false);
+  const [openWallet, setOpenWallet] = useState(false);
+
+  const [currency_id, setCurrency] = useState(null);
+  const [wallet, setWallets] = useState(null);
+
+  const toggleModal = () => {
+    if (isKeyboardVisible) {
+      Keyboard.dismiss()
+    } else {
+      setModalVisible(!isModalVisible);
+      if (success) {
+        setCurrency(null)
+      }
+    }
+  };
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => {
+        setKeyboardVisible(true); // or some other action
+      }
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => {
+        setKeyboardVisible(false); // or some other action
+      }
+    );
+
+    return () => {
+      keyboardDidHideListener.remove();
+      keyboardDidShowListener.remove();
+    };
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -31,7 +80,7 @@ const BudgetScreen = ({ navigation }) => {
           }) : null
         }
         <View style={styles.buttonWrapper}>
-          <CustomButton  text="Add Wallet" type="PRIMARY_SM" onPress="" />
+          <CustomButton  text="Add Wallet" type="PRIMARY_SM" onPress={toggleModal} />
         </View>
       </ScrollView>
       <View style={{ flex: 1 }}>
@@ -42,10 +91,10 @@ const BudgetScreen = ({ navigation }) => {
           avoidKeyboard
         >
           <View style={styles.modalContainer}>
-            <Text style={styles.title_SM}>Add Wallet</Text>
+            <Text style={styles.title_SM}>Add Budget</Text>
             <View style={styles.root}>
-              <CustomInput placeholder="Wallet Name" value={name} setValue={setName} />
-              <CustomInput placeholder="Amount" type="numeric" value={initial_balance} setValue={setInitialBalance} />
+              <CustomInput placeholder="Budget Name"/>
+              <CustomInput placeholder="Amount" type="numeric"/>
               <DropDownPicker
                 style={styles.dropDownPicker}
                 placeholderStyle={{
@@ -57,8 +106,8 @@ const BudgetScreen = ({ navigation }) => {
                   borderRadius: 5,
                 }}
                 placeholder="Select Currency"
-                open={openDropDown}
-                setOpen={setOpenDropDown}
+                open={openCurrency}
+                setOpen={setOpenCurrency}
                 items={currencies?.data ? currencies?.data.map((c) => {
                   return {
                     label: c.name,
@@ -69,7 +118,30 @@ const BudgetScreen = ({ navigation }) => {
                 setValue={setCurrency}
               />
               <View style={styles.gap}></View>
-              <CustomButton text="Add Wallet" type="PRIMARY" isLoading={loading} onPress={handleSubmit}/>
+               <DropDownPicker
+                style={styles.dropDownPicker}
+                placeholderStyle={{
+                  color: '#231c16'
+                }}
+                dropDownContainerStyle={{
+                  borderColor: '#f7f4f2',
+                  borderWidth: 1,
+                  borderRadius: 5,
+                }}
+                placeholder="Select Wallet"
+                open={openWallet}
+                setOpen={setOpenWallet}
+                items={wallets?.data ? wallets?.data.map((c) => {
+                  return {
+                    label: c.name,
+                    value: c.id
+                  }
+                }) : null}
+                value={wallet}
+                setValue={setWallets}
+              />
+              <View style={styles.gap}></View>
+              <CustomButton text="Add Budget" type="PRIMARY" isLoading={loading} />
             </View>
           </View>
         </Modal>
@@ -92,6 +164,12 @@ const styles = StyleSheet.create({
     fontSize: 50,
     color: '#231c16',
     marginBottom: 10,
+  },
+  title_SM: {
+    fontSize: 30,
+    color: '#231c16',
+    marginTop: 10,
+    marginBottom: 15,
   },
   progressContainer: {
     paddingBottom: 20,
