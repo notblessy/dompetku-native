@@ -80,7 +80,7 @@ const BudgetScreen = ({ navigation }) => {
           }) : null
         }
         <View style={styles.buttonWrapper}>
-          <CustomButton  text="Add Wallet" type="PRIMARY_SM" onPress={toggleModal} />
+          <CustomButton  text="Add Budget" type="PRIMARY_SM" onPress={toggleModal} />
         </View>
       </ScrollView>
       <View style={{ flex: 1 }}>
@@ -117,11 +117,10 @@ const BudgetScreen = ({ navigation }) => {
                 value={currency_id}
                 setValue={setCurrency}
               />
-              <View style={styles.gap}></View>
-               <DropDownPicker
+              <DropDownPicker
                 style={styles.dropDownPicker}
                 placeholderStyle={{
-                  color: '#231c16'
+                  color: '#231c16',
                 }}
                 dropDownContainerStyle={{
                   borderColor: '#f7f4f2',
@@ -212,16 +211,19 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     backgroundColor: '#F7F4F2',
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
 
     width: '100%',
-    padding: 10,
-    paddingBottom: 50,
+    padding: 15,
+    paddingBottom: 15,
   },
 
   dropDownPicker: {
-    borderColor: '#f7f4f2',
+    borderColor: '#e8e8e8',
     borderWidth: 1,
     borderRadius: 5,
+    marginVertical: 5,
   }
 })
 

@@ -285,6 +285,8 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     backgroundColor: '#F7F4F2',
+    borderTopLeftRadius: 15,
+    borderTopRightRadius: 15,
 
     width: '100%',
     padding: 10,
@@ -292,9 +294,10 @@ const styles = StyleSheet.create({
   },
 
   dropDownPicker: {
-    borderColor: '#f7f4f2',
+    borderColor: '#e8e8e8',
     borderWidth: 1,
     borderRadius: 5,
+    marginVertical: 5,
   }
 })
 
