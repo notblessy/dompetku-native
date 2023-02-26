@@ -145,7 +145,7 @@ const WalletScreen = ({ navigation }) => {
             wallets?.data?.map((w) => {
               return (
                 <View key={w.id} style={styles.listWrapper}>
-                  <Ionicons style={styles.icon} name="card" size="45px"/>
+                  <Ionicons style={styles.icon} name="card" size={45}/>
                   <View>
                     <Text style={styles.listItemTitle}>{w.name}</Text>
                     <Text style={styles.listItemDate}>{Moment(w.created_at).format('DD MMM YYYY')}</Text>
@@ -257,7 +257,7 @@ const styles = StyleSheet.create({
   },
   listItemTitle: {
     color: '#3b2f25',
-    fontSize: 12,
+    fontSize: 14,
     fontWeight: 'bold',
     paddingTop: 13,
   },

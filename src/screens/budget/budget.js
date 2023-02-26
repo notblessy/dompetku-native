@@ -174,7 +174,7 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
     marginBottom: 15,
     borderColor: '#e0d6ce',
-    borderBottomWidth: '1px'
+    borderBottomWidth: 1
   },
   budgetTextWrapper: {
     flex: 1,
