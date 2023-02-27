@@ -9,6 +9,37 @@ import Modal from "react-native-modal";
 import { useBudgets } from "../../libs/hooks/budget";
 import { useCurrency } from "../../libs/hooks/currency";
 import { useWallets } from "../../libs/hooks/wallet";
+import CustomMultiselect from "../../components/custom-multiselect";
+
+const items = [{
+  id: '92iijs7yta',
+  name: 'Ondo'
+}, {
+  id: 'a0s0a8ssbsd',
+  name: 'Ogun'
+}, {
+  id: '16hbajsabsd',
+  name: 'Calabar'
+}, {
+  id: 'nahs75a5sg',
+  name: 'Lagos'
+}, {
+  id: '667atsas',
+  name: 'Maiduguri'
+}, {
+  id: 'hsyasajs',
+  name: 'Anambra'
+}, {
+  id: 'djsjudksjd',
+  name: 'Benue'
+}, {
+  id: 'sdhyaysdj',
+  name: 'Kaduna'
+}, {
+  id: 'suudydjsjd',
+  name: 'Abuja'
+  }
+];
 
 const BudgetScreen = ({ navigation }) => {
   const { data: budgets, loading, success } = useBudgets();
@@ -95,7 +126,7 @@ const BudgetScreen = ({ navigation }) => {
             <View style={styles.root}>
               <CustomInput placeholder="Budget Name"/>
               <CustomInput placeholder="Amount" type="numeric"/>
-              <DropDownPicker
+              {/* <DropDownPicker
                 style={styles.dropDownPicker}
                 placeholderStyle={{
                   color: '#231c16'
@@ -138,7 +169,8 @@ const BudgetScreen = ({ navigation }) => {
                 }) : null}
                 value={wallet}
                 setValue={setWallets}
-              />
+              /> */}
+              <CustomMultiselect style={{zIndex: 100}} />
               <View style={styles.gap}></View>
               <CustomButton text="Add Budget" type="PRIMARY" isLoading={loading} />
             </View>

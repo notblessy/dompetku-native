@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
 import { Keyboard, ScrollView, StyleSheet, Text, View } from "react-native"
-import { LineChart } from "react-native-chart-kit";
-import {Picker} from '@react-native-picker/picker';
 import { useWallets } from "../../libs/hooks/wallet";
 
 import Moment from 'moment';
@@ -17,7 +15,6 @@ const WalletScreen = ({ navigation }) => {
   const { data: wallets, onAdd, loading, success } = useWallets();
   const { data: currencies } = useCurrency();
 
-  const [chartParentWidth, setChartParentWidth] = useState(0);
   const [isModalVisible, setModalVisible] = useState(false);
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   const [openDropDown, setOpenDropDown] = useState(false);
@@ -72,70 +69,6 @@ const WalletScreen = ({ navigation }) => {
     <View style={styles.container}>
       <Text style={styles.title}>Wallets</Text>
       <ScrollView>
-        {/* <View onLayout={({ nativeEvent }) => setChartParentWidth(nativeEvent.layout.width)}>
-          <LineChart
-            data={{
-              labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep"],
-              datasets: [
-                {
-                  data: [
-                    Math.random() * 50,
-                    Math.random() * 23,
-                    Math.random() * 30,
-                    Math.random() * 40,
-                    Math.random() * 55,
-                    Math.random() * 55,
-                    Math.random() * 61,
-                    Math.random() * 24,
-                  ],
-                  strokeWidth: 2,
-                  color: (opacity) => `rgba(147,118,93, 80)`
-                },
-                {
-                  data: [5,22,36,27,8,40,33, 20],
-                  strokeWidth: 2,
-                  color: (opacity) => `rgba(83,131,105, 80)`
-                },
-                {
-                  data: [26,20,5,20,24,2,33, 33],
-                  strokeWidth: 2,
-                  color: (opacity) => `rgba(88,87,130, 80)`
-                }
-              ],
-              legend: ["BCA", "DBS", "CASH"]
-            }
-          
-          }
-            width={chartParentWidth - 30}
-            height={220}
-            yAxisInterval={1}
-            withVerticalLines={false}
-            withHorizontalLines={true}
-            fromZero
-            chartConfig={{
-              backgroundColor: "#F7F4F2",
-              backgroundGradientFrom: "#F7F4F2",
-              backgroundGradientTo: "#F7F4F2",
-              useShadowColorFromDataset: true,
-              decimalPlaces: 0,
-              color: (opacity = 1) => `rgba(47,38,30, ${opacity})`,
-              labelColor: (opacity = 1) => `rgba(47,38,30, ${opacity})`,
-              style: {
-                borderRadius: 20,
-              },
-              propsForDots: {
-                r: "4",
-                strokeWidth: "6",
-              }
-            }}
-            bezier
-            style={{
-              borderRadius: 5,
-              paddingTop: 10,
-              paddingRight: 40,
-            }}
-          />
-        </View> */}
         <View style={styles.card}>
           <Text style={styles.cardTitle}>Rp. {totalWealth?.toLocaleString()}</Text>
           <Text style={styles.cardText}>Total Wealth</Text>
