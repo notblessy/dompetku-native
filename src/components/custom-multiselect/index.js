@@ -1,75 +1,103 @@
-import React, { useState } from 'react'
-import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import React, { useState } from "react";
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
-const CustomMultiselect = ({searchValue, setSearchValue, searchPlaceholder, searchable, placeholder}) => {
-    const [ show, setShow ] = useState(false)
-    const onPress = () => {
-        setShow(!show)
-    }
+const CustomMultiselect = ({
+  searchValue,
+  setSearchValue,
+  searchPlaceholder,
+  searchable,
+  placeholder,
+}) => {
+  const [show, setShow] = useState(false);
+  const onPress = () => {
+    setShow(!show);
+  };
 
-    return (
-        <View>
-          <TouchableOpacity style={styles.container} onPress={onPress}>
-            {
-              show ? <Text>Hide</Text> : <Text>{placeholder}</Text>
-            }
-          </TouchableOpacity>
-          <View style={{...styles.dropDownContainer, display: show ? 'flex' : 'none',}}>
-            {
-              searchable ?
-                <View style={styles.inputContainer}>
-                  <TextInput
-                    placeholderTextColor="#efeae6"
-                    style={styles.input}
-                    value={searchValue}
-                    onChangeText={setSearchValue}
-                    placeholder={searchPlaceholder}
-                  />
-                </View>
-              : null
-            }
-            <ScrollView style={styles.dropDownWrapper}>
-              <TouchableOpacity style={styles.itemButtom}>
-                  <Text style={styles.itemSelected}>INI MENU 1</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.itemButtom}>
-                  <Text>INI MENU 2</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.itemButtom}>
-                  <Text>INI MENU 3</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.itemButtom}>
-                  <Text>INI MENU 4</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.itemButtom}>
-                  <Text>INI MENU 5</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.itemButtom}>
-                  <Text>INI MENU 6</Text>
-              </TouchableOpacity>
-            </ScrollView>
+  return (
+    <View>
+      <TouchableOpacity style={styles.container} onPress={onPress}>
+        {show ? (
+          <View style={styles.label}>
+            <Text>{placeholder}</Text>
+            <Ionicons style={styles.iconDown} name="caret-up" size={15} />
           </View>
-        </View>
-    );
-}
+        ) : (
+          <View style={styles.label}>
+            <Text>{placeholder}</Text>
+            <Ionicons style={styles.iconDown} name="caret-down" size={15} />
+          </View>
+        )}
+      </TouchableOpacity>
+      <View
+        style={{ ...styles.dropDownContainer, display: show ? "flex" : "none" }}
+      >
+        {searchable ? (
+          <View style={styles.inputContainer}>
+            <TextInput
+              placeholderTextColor="#efeae6"
+              style={styles.input}
+              value={searchValue}
+              onChangeText={setSearchValue}
+              placeholder={searchPlaceholder}
+            />
+          </View>
+        ) : null}
+        <ScrollView style={styles.dropDownWrapper}>
+          <TouchableOpacity style={styles.itemButtom}>
+            <Text style={{ ...styles.item, color: "#836953" }}>INI MENU 1</Text>
+            <Ionicons
+              style={{ ...styles.itemIcon, color: "#836953" }}
+              name="checkmark-circle"
+              size={20}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.itemButtom}>
+            <Text>INI MENU 2</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.itemButtom}>
+            <Text>INI MENU 3</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.itemButtom}>
+            <Text>INI MENU 4</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.itemButtom}>
+            <Text>INI MENU 5</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.itemButtom}>
+            <Text>INI MENU 6</Text>
+          </TouchableOpacity>
+        </ScrollView>
+      </View>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#FFF',
-    width: '100%',
-    
-    borderColor: '#e8e8e8',
+    backgroundColor: "#FFF",
+    borderColor: "#e8e8e8",
     borderWidth: 1,
     borderRadius: 5,
 
     padding: 13,
     marginVertical: 5,
     elevation: 50,
-    zIndex: 10
+    zIndex: 10,
+  },
+  label: {
+    flexDirection: "row",
   },
   dropDownContainer: {
     position: "absolute",
-    width: '100%',
+    width: "100%",
     top: 51,
     elevation: 51,
     zIndex: 9,
@@ -77,24 +105,35 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFF",
     maxHeight: 150,
 
-    borderColor: '#e8e8e8',
+    borderColor: "#e8e8e8",
     borderWidth: 1,
     borderRadius: 5,
   },
+  iconDown: {
+    textAlign: "right",
+    flex: 1,
+    color: "#231c16",
+  },
   itemButtom: {
+    flex: 1,
+    flexDirection: "row",
     padding: 10,
     borderBottomWidth: 1,
-    borderBottomColor: '#e8e8e8',
+    borderBottomColor: "#e8e8e8",
   },
-  itemSelected: {
-    color: "#836953"
+  itemIcon: {
+    textAlign: "right",
+    flex: 1,
+  },
+  item: {
+    paddingTop: 3,
   },
   inputContainer: {
-    width: '100%',
+    width: "100%",
     padding: 13,
-    borderBottomColor: '#e8e8e8',
+    borderBottomColor: "#e8e8e8",
     borderBottomWidth: 1,
   },
-})
+});
 
 export default CustomMultiselect;
