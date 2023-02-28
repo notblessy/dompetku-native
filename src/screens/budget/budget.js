@@ -3,7 +3,6 @@ import { Keyboard, ScrollView, StyleSheet, Text, View } from "react-native"
 import CustomButton from "../../components/custom-button";
 import CustomInput from "../../components/custom-input";
 import LinearProgress from "../../components/linear-progress"
-import DropDownPicker from 'react-native-dropdown-picker';
 import Modal from "react-native-modal";
 
 import { useBudgets } from "../../libs/hooks/budget";
@@ -170,9 +169,14 @@ const BudgetScreen = ({ navigation }) => {
                 value={wallet}
                 setValue={setWallets}
               /> */}
-              <CustomMultiselect style={{zIndex: 100}} />
+              <CustomMultiselect
+                style={{zIndex: 100}}
+                placeholder="Select Categories"
+                searchable
+                searchPlaceholder="Search Category"
+              />
               <View style={styles.gap}></View>
-              <CustomButton text="Add Budget" type="PRIMARY" isLoading={loading} />
+              <CustomButton style={{top: 130}} text="Add Budget" type="PRIMARY" isLoading={loading} />
             </View>
           </View>
         </Modal>
@@ -245,12 +249,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#F7F4F2',
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
+    height: 500,
 
     width: '100%',
     padding: 15,
     paddingBottom: 15,
   },
-
   dropDownPicker: {
     borderColor: '#e8e8e8',
     borderWidth: 1,
