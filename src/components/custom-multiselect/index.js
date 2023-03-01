@@ -10,11 +10,13 @@ import {
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 const CustomMultiselect = ({
+  placeholder,
+  items,
   searchValue,
   setSearchValue,
   searchPlaceholder,
   searchable,
-  placeholder,
+  onSearch,
 }) => {
   const [show, setShow] = useState(false);
   const onPress = () => {
@@ -44,36 +46,31 @@ const CustomMultiselect = ({
             <TextInput
               placeholderTextColor="#efeae6"
               style={styles.input}
-              value={searchValue}
+              value={() => searchValue}
               onChangeText={setSearchValue}
+              onChange={onSearch}
               placeholder={searchPlaceholder}
             />
           </View>
         ) : null}
         <ScrollView style={styles.dropDownWrapper}>
-          <TouchableOpacity style={styles.itemButtom}>
+          {/* <TouchableOpacity style={styles.itemButtom}>
             <Text style={{ ...styles.item, color: "#836953" }}>INI MENU 1</Text>
             <Ionicons
               style={{ ...styles.itemIcon, color: "#836953" }}
               name="checkmark-circle"
               size={20}
             />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.itemButtom}>
-            <Text>INI MENU 2</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.itemButtom}>
-            <Text>INI MENU 3</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.itemButtom}>
-            <Text>INI MENU 4</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.itemButtom}>
-            <Text>INI MENU 5</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.itemButtom}>
-            <Text>INI MENU 6</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
+          {items
+            ? items.map((data) => {
+                return (
+                  <TouchableOpacity style={styles.itemButtom}>
+                    <Text>{data.name}</Text>
+                  </TouchableOpacity>
+                );
+              })
+            : null}
         </ScrollView>
       </View>
     </View>
