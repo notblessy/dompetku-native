@@ -34,7 +34,7 @@ export const useOptionCategories = () => {
   }, [checkToken, toast]);
 
   const pathKey = `/categories?name=${name}`;
-  console.log(pathKey);
+
   const { data: res, error } = useSWR(() => (token ? pathKey : null));
 
   const onSearch = (name) => {

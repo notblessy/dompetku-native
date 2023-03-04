@@ -12,21 +12,22 @@ import CustomMultiselect from "../../components/custom-multiselect";
 import { useOptionCategories } from "../../libs/hooks/category";
 
 const BudgetScreen = ({ navigation }) => {
-  const { data: budgets, loading, success } = useBudgets();
+  const { data: budgets, onAdd, loading, success } = useBudgets();
   const { data: categories, onSearch } = useOptionCategories();
   const { data: wallets } = useWallets();
   const { data: currencies } = useCurrency();
 
-  const [searchValue, setSearchValue] = useState("");
+  console.log(wallets);
 
   const [isModalVisible, setModalVisible] = useState(false);
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [selectedWallets, setSelectedWallets] = useState([]);
 
-  const [openCurrency, setOpenCurrency] = useState(false);
-  const [openWallet, setOpenWallet] = useState(false);
+  const [name, setName] = useState("");
+  const [amount, setAmount] = useState(0);
 
   const [currency_id, setCurrency] = useState(null);
-  const [wallet, setWallets] = useState(null);
 
   const toggleModal = () => {
     if (isKeyboardVisible) {
@@ -105,68 +106,67 @@ const BudgetScreen = ({ navigation }) => {
           <View style={styles.modalContainer}>
             <Text style={styles.title_SM}>Add Budget</Text>
             <View style={styles.root}>
-              <CustomInput placeholder="Budget Name" />
-              <CustomInput placeholder="Amount" type="numeric" />
-              {/* <DropDownPicker
-                style={styles.dropDownPicker}
-                placeholderStyle={{
-                  color: '#231c16'
-                }}
-                dropDownContainerStyle={{
-                  borderColor: '#f7f4f2',
-                  borderWidth: 1,
-                  borderRadius: 5,
-                }}
-                placeholder="Select Currency"
-                open={openCurrency}
-                setOpen={setOpenCurrency}
-                items={currencies?.data ? currencies?.data.map((c) => {
-                  return {
-                    label: c.name,
-                    value: c.id
-                  }
-                }) : null}
-                value={currency_id}
-                setValue={setCurrency}
+              <CustomInput
+                placeholder="Budget Name"
+                value={name}
+                setValue={setName}
               />
-              <DropDownPicker
-                style={styles.dropDownPicker}
-                placeholderStyle={{
-                  color: '#231c16',
-                }}
-                dropDownContainerStyle={{
-                  borderColor: '#f7f4f2',
-                  borderWidth: 1,
-                  borderRadius: 5,
-                }}
-                placeholder="Select Wallet"
-                open={openWallet}
-                setOpen={setOpenWallet}
-                items={wallets?.data ? wallets?.data.map((c) => {
-                  return {
-                    label: c.name,
-                    value: c.id
-                  }
-                }) : null}
-                value={wallet}
-                setValue={setWallets}
-              /> */}
+              <CustomInput
+                placeholder="Amount"
+                type="numeric"
+                value={amount}
+                setValue={setAmount}
+              />
               <CustomMultiselect
-                style={{ zIndex: 100 }}
                 placeholder="Select Categories"
                 searchable
                 searchPlaceholder="Search Category"
                 items={categories}
-                searchValue={searchValue}
-                setSearchValue={setSearchValue}
-                onSearch={() => onSearch(searchValue)}
+                onChange={onSearch}
+                onSelect={(data) => {
+                  if (data?.selected) {
+                    setSelectedCategories((prev) => [...prev, data.id]);
+                  } else {
+                    selectedCategories.splice(
+                      selectedCategories.findIndex((id) => {
+                        id === data.id;
+                      }),
+                      1
+                    );
+                  }
+                }}
+              />
+              <CustomMultiselect
+                placeholder="Select Wallets"
+                items={wallets?.data}
+                onSelect={(data) => {
+                  if (data?.selected) {
+                    setSelectedWallets((prev) => [...prev, data.id]);
+                  } else {
+                    selectedWallets.splice(
+                      selectedWallets.findIndex((id) => {
+                        id === data.id;
+                      }),
+                      1
+                    );
+                  }
+                }}
               />
               <View style={styles.gap}></View>
+            </View>
+            <View>
               <CustomButton
-                style={{ top: 130 }}
                 text="Add Budget"
                 type="PRIMARY"
                 isLoading={loading}
+                onPress={() =>
+                  onAdd({
+                    name,
+                    amount,
+                    category_ids: selectedCategories,
+                    wallet_ids: selectedWallets,
+                  })
+                }
               />
             </View>
           </View>
@@ -240,7 +240,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#F7F4F2",
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
-    height: 500,
+    minHeight: 500,
 
     width: "100%",
     padding: 15,

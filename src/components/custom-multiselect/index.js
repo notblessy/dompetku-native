@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   ScrollView,
   StyleSheet,
@@ -12,16 +12,28 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 const CustomMultiselect = ({
   placeholder,
   items,
-  searchValue,
-  setSearchValue,
   searchPlaceholder,
   searchable,
-  onSearch,
+  onChange,
+  onSelect,
 }) => {
   const [show, setShow] = useState(false);
+  const [selectedCategories, setSelectedCategories] = useState([]);
+
   const onPress = () => {
     setShow(!show);
   };
+
+  items?.map((item) => {
+    selectedCategories.map((selected) => {
+      if (item.id === selected.id) {
+        item.selected = selected.selected ? selected.selected : false;
+        return item;
+      }
+      return item;
+    });
+    return item;
+  });
 
   return (
     <View>
@@ -46,27 +58,42 @@ const CustomMultiselect = ({
             <TextInput
               placeholderTextColor="#efeae6"
               style={styles.input}
-              value={() => searchValue}
-              onChangeText={setSearchValue}
-              onChange={onSearch}
+              onChangeText={onChange}
               placeholder={searchPlaceholder}
             />
           </View>
         ) : null}
         <ScrollView style={styles.dropDownWrapper}>
-          {/* <TouchableOpacity style={styles.itemButtom}>
-            <Text style={{ ...styles.item, color: "#836953" }}>INI MENU 1</Text>
-            <Ionicons
-              style={{ ...styles.itemIcon, color: "#836953" }}
-              name="checkmark-circle"
-              size={20}
-            />
-          </TouchableOpacity> */}
           {items
             ? items.map((data) => {
                 return (
-                  <TouchableOpacity style={styles.itemButtom}>
-                    <Text>{data.name}</Text>
+                  <TouchableOpacity
+                    style={styles.itemButton}
+                    onPress={() => {
+                      const selected = {
+                        ...data,
+                        selected: !data.selected,
+                      };
+                      onSelect(selected);
+                      setSelectedCategories((prev) => [...prev, selected]);
+                    }}
+                  >
+                    <Text
+                      style={{
+                        color: data?.selected ? "#836953" : "#231c16",
+                        paddingVertical: 3,
+                      }}
+                    >
+                      {data.name}
+                    </Text>
+                    <Ionicons
+                      style={{
+                        ...styles.itemIcon,
+                        display: data?.selected ? "flex" : "none",
+                      }}
+                      name="checkmark-circle"
+                      size={20}
+                    />
                   </TouchableOpacity>
                 );
               })
@@ -111,7 +138,7 @@ const styles = StyleSheet.create({
     flex: 1,
     color: "#231c16",
   },
-  itemButtom: {
+  itemButton: {
     flex: 1,
     flexDirection: "row",
     padding: 10,
@@ -121,6 +148,7 @@ const styles = StyleSheet.create({
   itemIcon: {
     textAlign: "right",
     flex: 1,
+    color: "#836953",
   },
   item: {
     paddingTop: 3,
