@@ -23,7 +23,6 @@ export const useBudgets = () => {
 
   const onAdd = useCallback(
     async (data) => {
-      console.log(data);
       setLoading(true);
       try {
         const { data: res } = await api.post("/budgets", data);

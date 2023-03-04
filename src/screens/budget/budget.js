@@ -17,8 +17,6 @@ const BudgetScreen = ({ navigation }) => {
   const { data: wallets } = useWallets();
   const { data: currencies } = useCurrency();
 
-  console.log(wallets);
-
   const [isModalVisible, setModalVisible] = useState(false);
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   const [selectedCategories, setSelectedCategories] = useState([]);
