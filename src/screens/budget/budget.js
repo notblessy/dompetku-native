@@ -82,11 +82,11 @@ const BudgetScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Budgets</Text>
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         {budgets?.data
           ? budgets?.data.map((b) => {
               return (
-                <View style={styles.progressContainer}>
+                <View key={b.id} style={styles.progressContainer}>
                   <View style={styles.budgetTextWrapper}>
                     <View>
                       <Text style={styles.budgetName}>{b.name}</Text>

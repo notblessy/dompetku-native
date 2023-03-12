@@ -225,9 +225,12 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     width: "100%",
-    padding: 13,
+    paddingHorizontal: 10,
     borderColor: "#e8e8e8",
     borderWidth: 1,
+  },
+  input: {
+    paddingVertical: Platform.OS === "ios" ? 13 : 9,
   },
 });
 

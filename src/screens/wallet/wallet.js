@@ -73,7 +73,7 @@ const WalletScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Wallets</Text>
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.card}>
           <Text style={styles.cardTitle}>
             Rp. {totalWealth?.toLocaleString()}
