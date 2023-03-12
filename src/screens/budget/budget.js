@@ -4,11 +4,11 @@ import CustomButton from "../../components/custom-button";
 import CustomInput from "../../components/custom-input";
 import LinearProgress from "../../components/linear-progress";
 import Modal from "react-native-modal";
+import CustomMultiselect from "../../components/custom-multiselect";
 
 import { useBudgets } from "../../libs/hooks/budget";
 import { useCurrency } from "../../libs/hooks/currency";
 import { useWallets } from "../../libs/hooks/wallet";
-import CustomMultiselect from "../../components/custom-multiselect";
 import { useOptionCategories } from "../../libs/hooks/category";
 
 const BudgetScreen = ({ navigation }) => {
@@ -25,16 +25,21 @@ const BudgetScreen = ({ navigation }) => {
   const [name, setName] = useState("");
   const [amount, setAmount] = useState(0);
 
-  const [currency_id, setCurrency] = useState(null);
+  const placeholderCategories =
+    selectedCategories.length > 0
+      ? `Select Categories (${selectedCategories.length} selected)`
+      : "Select Categories";
+
+  const placeholderWallets =
+    selectedWallets.length > 0
+      ? `Select Wallets (${selectedWallets.length} selected)`
+      : "Select Wallets";
 
   const toggleModal = () => {
     if (isKeyboardVisible) {
       Keyboard.dismiss();
     } else {
       setModalVisible(!isModalVisible);
-      if (success) {
-        setCurrency(null);
-      }
     }
   };
 
@@ -116,39 +121,21 @@ const BudgetScreen = ({ navigation }) => {
                 setValue={setAmount}
               />
               <CustomMultiselect
-                placeholder="Select Categories"
+                placeholder={placeholderCategories}
+                title="Select Categories"
                 searchable
                 searchPlaceholder="Search Category"
+                handleSearch={onSearch}
                 items={categories}
-                onChange={onSearch}
-                onSelect={(data) => {
-                  if (data?.selected) {
-                    setSelectedCategories((prev) => [...prev, data.id]);
-                  } else {
-                    selectedCategories.splice(
-                      selectedCategories.findIndex((id) => {
-                        id === data.id;
-                      }),
-                      1
-                    );
-                  }
-                }}
+                selectedItems={selectedCategories}
+                onSelectItem={setSelectedCategories}
               />
               <CustomMultiselect
-                placeholder="Select Wallets"
+                placeholder={placeholderWallets}
+                title="Select Wallets"
                 items={wallets?.data}
-                onSelect={(data) => {
-                  if (data?.selected) {
-                    setSelectedWallets((prev) => [...prev, data.id]);
-                  } else {
-                    selectedWallets.splice(
-                      selectedWallets.findIndex((id) => {
-                        id === data.id;
-                      }),
-                      1
-                    );
-                  }
-                }}
+                selectedItems={selectedCategories}
+                onSelectItem={setSelectedCategories}
               />
               <View style={styles.gap}></View>
             </View>
@@ -238,7 +225,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#F7F4F2",
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
-    minHeight: 500,
+    minHeight: 750,
 
     width: "100%",
     padding: 15,

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
+  Keyboard,
   ScrollView,
   StyleSheet,
   Text,
@@ -7,22 +8,54 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import Modal from "react-native-modal";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 const CustomMultiselect = ({
   placeholder,
+  title,
   items,
   searchPlaceholder,
   searchable,
-  onChange,
-  onSelect,
+  handleSearch,
+  selectedItems,
+  onSelectItem,
 }) => {
   const [show, setShow] = useState(false);
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   const [selectedCategories, setSelectedCategories] = useState([]);
+
+  const toggleModal = () => {
+    if (isKeyboardVisible) {
+      Keyboard.dismiss();
+    } else {
+      setShow(!show);
+    }
+  };
 
   const onPress = () => {
     setShow(!show);
   };
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      "keyboardDidShow",
+      () => {
+        setKeyboardVisible(true); // or some other action
+      }
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      "keyboardDidHide",
+      () => {
+        setKeyboardVisible(false); // or some other action
+      }
+    );
+
+    return () => {
+      keyboardDidHideListener.remove();
+      keyboardDidShowListener.remove();
+    };
+  }, []);
 
   items?.map((item) => {
     selectedCategories.map((selected) => {
@@ -50,56 +83,71 @@ const CustomMultiselect = ({
           </View>
         )}
       </TouchableOpacity>
-      <View
-        style={{ ...styles.dropDownContainer, display: show ? "flex" : "none" }}
+      <Modal
+        style={styles.modalWrapper}
+        isVisible={show}
+        onBackdropPress={toggleModal}
+        avoidKeyboard
       >
-        {searchable ? (
-          <View style={styles.inputContainer}>
-            <TextInput
-              placeholderTextColor="#efeae6"
-              style={styles.input}
-              onChangeText={onChange}
-              placeholder={searchPlaceholder}
-            />
-          </View>
-        ) : null}
-        <ScrollView style={styles.dropDownWrapper}>
-          {items
-            ? items.map((data) => {
-                return (
-                  <TouchableOpacity
-                    style={styles.itemButton}
-                    onPress={() => {
-                      const selected = {
-                        ...data,
-                        selected: !data.selected,
-                      };
-                      onSelect(selected);
-                      setSelectedCategories((prev) => [...prev, selected]);
-                    }}
-                  >
-                    <Text
-                      style={{
-                        color: data?.selected ? "#836953" : "#231c16",
-                        paddingVertical: 3,
+        <View style={styles.modalContainer}>
+          <Text style={styles.title_SM}>{title}</Text>
+          {searchable ? (
+            <View>
+              <Ionicons style={styles.itemIcon} name="search" size={20} />
+              <View style={styles.inputContainer}>
+                <TextInput
+                  placeholderTextColor="#efeae6"
+                  style={styles.input}
+                  onChangeText={handleSearch}
+                  placeholder={searchPlaceholder}
+                />
+              </View>
+            </View>
+          ) : null}
+          <ScrollView style={styles.dropDownWrapper}>
+            {items
+              ? items.map((data) => {
+                  return (
+                    <TouchableOpacity
+                      style={styles.itemButton}
+                      onPress={() => {
+                        const selected = {
+                          ...data,
+                          selected: !data.selected,
+                        };
+                        setSelectedCategories((prev) => [...prev, selected]);
+                        if (selected.selected) {
+                          onSelectItem((prev) => [...prev, selected.id]);
+                        } else {
+                          onSelectItem(
+                            selectedItems?.filter((d) => d !== selected.id)
+                          );
+                        }
                       }}
                     >
-                      {data.name}
-                    </Text>
-                    <Ionicons
-                      style={{
-                        ...styles.itemIcon,
-                        display: data?.selected ? "flex" : "none",
-                      }}
-                      name="checkmark-circle"
-                      size={20}
-                    />
-                  </TouchableOpacity>
-                );
-              })
-            : null}
-        </ScrollView>
-      </View>
+                      <Text
+                        style={{
+                          color: data?.selected ? "#836953" : "#231c16",
+                          paddingVertical: 3,
+                        }}
+                      >
+                        {data.name}
+                      </Text>
+                      <Ionicons
+                        style={{
+                          ...styles.itemIcon,
+                          display: data?.selected ? "flex" : "none",
+                        }}
+                        name="checkmark-circle"
+                        size={20}
+                      />
+                    </TouchableOpacity>
+                  );
+                })
+              : null}
+          </ScrollView>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -115,6 +163,13 @@ const styles = StyleSheet.create({
     marginVertical: 5,
     elevation: 50,
     zIndex: 10,
+  },
+  title_SM: {
+    fontSize: 20,
+    color: "#231c16",
+    marginTop: 10,
+    marginBottom: 15,
+    textAlign: "center",
   },
   label: {
     flexDirection: "row",
@@ -153,11 +208,26 @@ const styles = StyleSheet.create({
   item: {
     paddingTop: 3,
   },
+  modalWrapper: {
+    flex: 1,
+    margin: 0,
+    justifyContent: "flex-end",
+  },
+  modalContainer: {
+    backgroundColor: "#F7F4F2",
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+    height: 500,
+
+    width: "100%",
+    padding: 15,
+    paddingBottom: 15,
+  },
   inputContainer: {
     width: "100%",
     padding: 13,
-    borderBottomColor: "#e8e8e8",
-    borderBottomWidth: 1,
+    borderColor: "#e8e8e8",
+    borderWidth: 1,
   },
 });
 
