@@ -1,7 +1,9 @@
-import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import { Animated, StyleSheet, Text, View } from "react-native";
 
 const LinearProgress = ({ value }) => {
+  const [animation, setAnimation] = useState(new Animated.Value(0));
+
   let bgColor = "";
 
   if (value > 0 && value < 30) {
@@ -16,19 +18,43 @@ const LinearProgress = ({ value }) => {
     bgColor = "#d8ccc2";
   }
 
+  const startProgressBar = () => {
+    Animated.timing(animation, {
+      toValue: value,
+      duration: 1000,
+      useNativeDriver: false,
+    }).start();
+  };
+
+  const progressValue = animation.interpolate({
+    inputRange: [0, 100],
+    outputRange: ["0%", `100%`],
+  });
+
+  startProgressBar();
+
   return (
     <View style={styles.wrapper}>
-      <View
+      <Animated.View
         style={{
           ...styles.container,
-          width: `${value > 0 ? value : 20}%`,
+          width: progressValue,
           backgroundColor: value > 0 ? bgColor : null,
+          padding: 20,
         }}
       >
-        <Text style={{ color: `${value > 0 ? "white" : "#231c16"}` }}>
+        <Text
+          style={{
+            color: `${value > 0 ? "white" : "#231c16"}`,
+            position: "absolute",
+            padding: 12,
+            includeFontPaddixng: false,
+            width: 100,
+          }}
+        >
           {value}%
         </Text>
-      </View>
+      </Animated.View>
     </View>
   );
 };

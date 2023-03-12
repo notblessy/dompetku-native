@@ -109,6 +109,7 @@ const CustomMultiselect = ({
               ? items.map((data) => {
                   return (
                     <TouchableOpacity
+                      key={data.id}
                       style={styles.itemButton}
                       onPress={() => {
                         const selected = {
@@ -224,10 +225,12 @@ const styles = StyleSheet.create({
     paddingBottom: 15,
   },
   inputContainer: {
+    backgroundColor: "#FFF",
     width: "100%",
     paddingHorizontal: 10,
     borderColor: "#e8e8e8",
     borderWidth: 1,
+    borderRadius: 5,
   },
   input: {
     paddingVertical: Platform.OS === "ios" ? 13 : 9,

@@ -1,5 +1,12 @@
 import { useEffect, useState } from "react";
-import { Keyboard, ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+  Keyboard,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import CustomButton from "../../components/custom-button";
 import CustomInput from "../../components/custom-input";
 import LinearProgress from "../../components/linear-progress";
@@ -101,7 +108,8 @@ const BudgetScreen = ({ navigation }) => {
                     </View>
                   </View>
                   <View>
-                    <LinearProgress value={b.progress} />
+                    {/* TODO: Will change value if transaction api is ready */}
+                    <LinearProgress value={Math.floor(Math.random() * 101)} />
                   </View>
                 </View>
               );
