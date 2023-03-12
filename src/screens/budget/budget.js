@@ -40,7 +40,23 @@ const BudgetScreen = ({ navigation }) => {
       Keyboard.dismiss();
     } else {
       setModalVisible(!isModalVisible);
+      if (success) {
+        setName(null);
+        setAmount(0);
+        setSelectedCategories([]);
+        setSelectedWallets([]);
+      }
     }
+  };
+
+  const handleSubmit = () => {
+    onAdd({
+      name,
+      amount,
+      category_ids: selectedCategories,
+      wallet_ids: selectedWallets,
+    });
+    setModalVisible(!isModalVisible);
   };
 
   useEffect(() => {
@@ -134,8 +150,8 @@ const BudgetScreen = ({ navigation }) => {
                 placeholder={placeholderWallets}
                 title="Select Wallets"
                 items={wallets?.data}
-                selectedItems={selectedCategories}
-                onSelectItem={setSelectedCategories}
+                selectedItems={selectedWallets}
+                onSelectItem={setSelectedWallets}
               />
               <View style={styles.gap}></View>
             </View>
@@ -144,14 +160,7 @@ const BudgetScreen = ({ navigation }) => {
                 text="Add Budget"
                 type="PRIMARY"
                 isLoading={loading}
-                onPress={() =>
-                  onAdd({
-                    name,
-                    amount,
-                    category_ids: selectedCategories,
-                    wallet_ids: selectedWallets,
-                  })
-                }
+                onPress={handleSubmit}
               />
             </View>
           </View>
@@ -225,11 +234,11 @@ const styles = StyleSheet.create({
     backgroundColor: "#F7F4F2",
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
-    minHeight: 750,
+    minHeight: 600,
 
     width: "100%",
-    padding: 15,
-    paddingBottom: 15,
+    padding: 10,
+    paddingBottom: 50,
   },
   dropDownPicker: {
     borderColor: "#e8e8e8",
