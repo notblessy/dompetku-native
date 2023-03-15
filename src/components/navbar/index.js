@@ -11,18 +11,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { SignInScreen, SignUpScreen } from "../../screens/auth";
 import { WalletScreen } from "../../screens/wallet";
 import { BudgetScreen } from "../../screens/budget";
-
-function HomeTab({ navigation }) {
-  return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Text>Home Screen</Text>
-      <Button
-        title="Go to Budgets"
-        onPress={() => navigation.navigate("Wallet")}
-      />
-    </View>
-  );
-}
+import TransactionScreen from "../../screens/transaction/transaction";
 
 function Account({ navigation }) {
   const { onLogout } = useAuth();
@@ -63,7 +52,7 @@ const NavBar = ({ value, setValue, placeholder, secured }) => {
             tabBarIcon: ({ focused, color, size }) => {
               let iconName;
 
-              if (route.name === "Home") {
+              if (route.name === "Transaction") {
                 iconName = focused ? "home" : "home-outline";
               } else if (route.name === "Wallet") {
                 iconName = focused ? "wallet" : "wallet-outline";
@@ -81,8 +70,8 @@ const NavBar = ({ value, setValue, placeholder, secured }) => {
           })}
         >
           <Tab.Screen
-            name="Home"
-            component={HomeTab}
+            name="Transaction"
+            component={TransactionScreen}
             options={{ headerShown: false }}
           />
           <Tab.Screen
