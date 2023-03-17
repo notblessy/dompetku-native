@@ -9,8 +9,13 @@ export const useTransactions = () => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(null);
   const [success, setSuccess] = useState(true);
+  const [queryType, setQueryType] = useState("");
 
-  const { data = [], error, isValidating } = useSWR("/transactions");
+  const {
+    data = [],
+    error,
+    isValidating,
+  } = useSWR(`/transactions?type=${queryType}`);
 
   useEffect(() => {
     if (message) {
@@ -49,6 +54,10 @@ export const useTransactions = () => {
     [toast]
   );
 
+  const onFilterType = (type) => {
+    setQueryType(type);
+  };
+
   const onDelete = useCallback(
     async (transactionId) => {
       try {
@@ -82,6 +91,7 @@ export const useTransactions = () => {
     loading: (!error && !data) || isValidating || loading,
     onAdd,
     onDelete,
+    onFilterType,
     success,
   };
 };

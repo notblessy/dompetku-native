@@ -1,5 +1,13 @@
 import { useEffect, useState } from "react";
-import { Keyboard, ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+  Dimensions,
+  Keyboard,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { useTransactions } from "../../libs/hooks/transaction";
 
 import Moment from "moment";
@@ -12,7 +20,13 @@ import CustomInput from "../../components/custom-input";
 import { useCurrency } from "../../libs/hooks/currency";
 
 const TransactionScreen = ({ navigation }) => {
-  const { data: transactions, onAdd, loading, success } = useTransactions();
+  const {
+    data: transactions,
+    onAdd,
+    onFilterType,
+    loading,
+    success,
+  } = useTransactions();
   const { data: currencies } = useCurrency();
 
   const [isModalVisible, setModalVisible] = useState(false);
@@ -22,6 +36,7 @@ const TransactionScreen = ({ navigation }) => {
   const [name, setName] = useState(null);
   const [initial_balance, setInitialBalance] = useState(0);
   const [currency_id, setCurrency] = useState(null);
+  const [activeTab, setActiveTab] = useState("ALL");
 
   const toggleModal = () => {
     if (isKeyboardVisible) {
@@ -68,8 +83,48 @@ const TransactionScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <View style={{ height: 250, backgroundColor: "#faca50", paddingTop: 80 }}>
+      <View
+        style={{ backgroundColor: "#faca50", widthh: "100%", paddingTop: 80 }}
+      >
         <Text style={styles.title}>Transactions</Text>
+        <View style={styles.buttonTabContainer}>
+          <TouchableOpacity
+            style={{
+              ...styles.buttonTab,
+              backgroundColor: activeTab === "INCOME" ? "#dae7e0" : "#efe6e6",
+            }}
+            onPress={() => {
+              onFilterType("INCOME");
+              setActiveTab("INCOME");
+            }}
+          >
+            <Text style={{ textAlign: "center" }}>Incomes</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              ...styles.buttonTab,
+              backgroundColor: activeTab === "ALL" ? "#dae7e0" : "#efe6e6",
+            }}
+            onPress={() => {
+              onFilterType("");
+              setActiveTab("ALL");
+            }}
+          >
+            <Text style={{ textAlign: "center" }}>All</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              ...styles.buttonTab,
+              backgroundColor: activeTab === "EXPENSES" ? "#dae7e0" : "#efe6e6",
+            }}
+            onPress={() => {
+              onFilterType("EXPENSES");
+              setActiveTab("EXPENSES");
+            }}
+          >
+            <Text style={{ textAlign: "center" }}>Expenses</Text>
+          </TouchableOpacity>
+        </View>
       </View>
       <ScrollView showsVerticalScrollIndicator={false} style={{ padding: 30 }}>
         <View>
@@ -193,6 +248,14 @@ const styles = StyleSheet.create({
     color: "#231c16",
     marginBottom: 10,
     paddingHorizontal: 30,
+  },
+  buttonTabContainer: {
+    backgroundColor: "#FFF",
+    flexDirection: "row",
+  },
+  buttonTab: {
+    paddingVertical: 15,
+    width: "33.3%",
   },
   title_SM: {
     fontSize: 30,
