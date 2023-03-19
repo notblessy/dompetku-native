@@ -17,7 +17,9 @@ import DropDownPicker from "react-native-dropdown-picker";
 import CustomButton from "../../components/custom-button";
 import Modal from "react-native-modal";
 import CustomInput from "../../components/custom-input";
-import { useCurrency } from "../../libs/hooks/currency";
+import { useOptionCategories } from "../../libs/hooks/category";
+import { useWallets } from "../../libs/hooks/wallet";
+import CustomSelect from "../../components/custom-select";
 
 const TransactionScreen = ({ navigation }) => {
   const {
@@ -27,16 +29,28 @@ const TransactionScreen = ({ navigation }) => {
     loading,
     success,
   } = useTransactions();
-  const { data: currencies } = useCurrency();
+
+  const { data: wallets } = useWallets();
+  const { data: categories, onSearch } = useOptionCategories();
 
   const [isModalVisible, setModalVisible] = useState(false);
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
-  const [openDropDown, setOpenDropDown] = useState(false);
 
-  const [name, setName] = useState(null);
-  const [initial_balance, setInitialBalance] = useState(0);
-  const [currency_id, setCurrency] = useState(null);
+  const [description, setDescription] = useState(null);
+  const [amount, setAmount] = useState(0);
+
+  const [selectedCategory, setSelectedCategory] = useState({});
+  const [selectedWallet, setSelectedWallet] = useState({});
+
   const [activeTab, setActiveTab] = useState("ALL");
+
+  const placeholderCategories = selectedCategory?.label
+    ? selectedCategory.label
+    : "Select Category";
+
+  const placeholderWallet = selectedWallet?.label
+    ? selectedWallet.label
+    : "Select Wallet";
 
   const toggleModal = () => {
     if (isKeyboardVisible) {
@@ -44,20 +58,23 @@ const TransactionScreen = ({ navigation }) => {
     } else {
       setModalVisible(!isModalVisible);
       if (success) {
-        setName(null);
-        setInitialBalance(0);
-        setCurrency(null);
+        setDescription(null);
+        setAmount(0);
       }
     }
   };
 
   const handleSubmit = () => {
-    onAdd({ name, initial_balance, currency_id });
+    onAdd({
+      amount,
+      category_id: selectedCategory,
+      wallet_id: selectedWallet,
+      spent_at: spentAt,
+    });
     setModalVisible(!isModalVisible);
     if (success) {
-      setName(null);
-      setInitialBalance(0);
-      setCurrency(null);
+      setDescription(null);
+      setAmount(0);
     }
   };
 
@@ -180,44 +197,35 @@ const TransactionScreen = ({ navigation }) => {
           avoidKeyboard
         >
           <View style={styles.modalContainer}>
-            <Text style={styles.title_SM}>Add Wallet</Text>
+            <Text style={styles.title_SM}>Add Transaction</Text>
             <View style={styles.root}>
-              <CustomInput
-                placeholder="Wallet Name"
-                value={name}
-                setValue={setName}
+              <CustomSelect
+                placeholder={placeholderCategories}
+                title="Select Category"
+                searchable
+                searchPlaceholder="Search Category"
+                handleSearch={onSearch}
+                items={categories}
+                selectedItem={selectedCategory}
+                setSelectedItem={setSelectedCategory}
               />
               <CustomInput
                 placeholder="Amount"
                 type="numeric"
-                value={initial_balance}
-                setValue={setInitialBalance}
+                value={amount}
+                setValue={setAmount}
               />
-              <DropDownPicker
-                style={styles.dropDownPicker}
-                placeholderStyle={{
-                  color: "#231c16",
-                }}
-                dropDownContainerStyle={{
-                  borderColor: "#f7f4f2",
-                  borderWidth: 1,
-                  borderRadius: 5,
-                }}
-                placeholder="Select Currency"
-                open={openDropDown}
-                setOpen={setOpenDropDown}
-                items={
-                  currencies?.data
-                    ? currencies?.data.map((c) => {
-                        return {
-                          label: c.name,
-                          value: c.id,
-                        };
-                      })
-                    : null
-                }
-                value={currency_id}
-                setValue={setCurrency}
+              <CustomSelect
+                placeholder={placeholderWallet}
+                title="Select Wallet"
+                items={wallets?.data}
+                selectedItem={selectedWallet}
+                setSelectedItem={setSelectedWallet}
+              />
+              <CustomInput
+                placeholder="Description"
+                value={description}
+                setValue={setDescription}
               />
               <View style={styles.gap}></View>
               <CustomButton
