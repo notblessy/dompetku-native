@@ -72,8 +72,23 @@ const WalletScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Wallets</Text>
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <View
+        style={{ backgroundColor: "#faca50", widthh: "100%", paddingTop: 80 }}
+      >
+        <Text style={styles.title}>Wallets</Text>
+      </View>
+
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        style={{
+          paddingHorizontal: 30,
+          paddingTop: 10,
+          borderTopLeftRadius: 10,
+          borderTopRightRadius: 10,
+          backgroundColor: "#F7F4F2",
+          height: "100%",
+        }}
+      >
         <View style={styles.card}>
           <Text style={styles.cardTitle}>
             IDR {totalWealth?.toLocaleString()}
@@ -84,7 +99,7 @@ const WalletScreen = ({ navigation }) => {
           {wallets?.data?.map((w) => {
             return (
               <View key={w.id} style={styles.listWrapper}>
-                <Ionicons style={styles.icon} name="card" size={45} />
+                <Ionicons style={styles.icon} name="card-outline" size={45} />
                 <View>
                   <Text style={styles.listItemTitle}>{w.name}</Text>
                   <Text style={styles.listItemDate}>
@@ -174,14 +189,13 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: "#F7F4F2",
-    paddingTop: 80,
-    paddingHorizontal: 30,
+    backgroundColor: "#faca50",
   },
   title: {
     fontSize: 50,
     color: "#231c16",
     marginBottom: 10,
+    paddingHorizontal: 30,
   },
   title_SM: {
     fontSize: 30,
