@@ -33,7 +33,9 @@ export const useTransactions = () => {
         const { data: res } = await api.post("/transactions", data);
 
         if (res.success) {
-          mutate("/transactions");
+          mutate(`/transactions?type=${queryType}`);
+          mutate(`/wallets`);
+          mutate(`/budgets`);
           toast.show("New transaction successfully added!", {
             type: "success",
           });

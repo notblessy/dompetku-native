@@ -76,7 +76,7 @@ const WalletScreen = ({ navigation }) => {
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.card}>
           <Text style={styles.cardTitle}>
-            Rp. {totalWealth?.toLocaleString()}
+            IDR {totalWealth?.toLocaleString()}
           </Text>
           <Text style={styles.cardText}>Total Wealth</Text>
         </View>
@@ -92,7 +92,7 @@ const WalletScreen = ({ navigation }) => {
                   </Text>
                 </View>
                 <Text style={styles.listItemText}>
-                  Rp. {w.initial_balance.toLocaleString()}
+                  IDR {w.initial_balance.toLocaleString()}
                 </Text>
               </View>
             );

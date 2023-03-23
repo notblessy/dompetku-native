@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import {
+  Button,
   Dimensions,
   Keyboard,
   ScrollView,
@@ -12,7 +13,7 @@ import { useTransactions } from "../../libs/hooks/transaction";
 
 import Moment from "moment";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import DropDownPicker from "react-native-dropdown-picker";
+import DateTimePicker from "@react-native-community/datetimepicker";
 
 import CustomButton from "../../components/custom-button";
 import Modal from "react-native-modal";
@@ -44,6 +45,9 @@ const TransactionScreen = ({ navigation }) => {
 
   const [activeTab, setActiveTab] = useState("ALL");
 
+  const [spentAt, setSpentAt] = useState(new Date());
+  const [openDatePicker, setOpenDatePicker] = useState(false);
+
   const placeholderCategories = selectedCategory?.label
     ? selectedCategory.label
     : "Select Category";
@@ -64,17 +68,49 @@ const TransactionScreen = ({ navigation }) => {
     }
   };
 
+  const toggleDatePicker = () => {
+    if (isKeyboardVisible) {
+      Keyboard.dismiss();
+    } else {
+      setOpenDatePicker(!openDatePicker);
+    }
+  };
+
+  const onTimeChange = (event, newTime) => {
+    if (Platform.OS === "android") {
+      setOpenDatePicker(false);
+    }
+
+    if (event.type === "dismissed") {
+      setOpenDatePicker(false);
+      return;
+    }
+
+    if (event.type === "set") {
+      setSpentAt(newTime);
+    }
+
+    if (event.type === "neutralButtonPressed") {
+      setSpentAt(new Date(0));
+    } else {
+      setSpentAt(newTime);
+    }
+  };
+
   const handleSubmit = () => {
     onAdd({
       amount,
-      category_id: selectedCategory,
-      wallet_id: selectedWallet,
+      category_id: selectedCategory?.value,
+      wallet_id: selectedWallet?.value,
       spent_at: spentAt,
     });
     setModalVisible(!isModalVisible);
     if (success) {
       setDescription(null);
       setAmount(0);
+      setSelectedCategory({});
+      setSelectedWallet({});
+      setSpentAt(new Date());
     }
   };
 
@@ -227,15 +263,60 @@ const TransactionScreen = ({ navigation }) => {
                 value={description}
                 setValue={setDescription}
               />
+
+              <View style={styles.pickerContainer}>
+                <TouchableOpacity
+                  style={styles.pickerLabel}
+                  onPress={() => setOpenDatePicker(!openDatePicker)}
+                >
+                  <Text>Select Date</Text>
+                </TouchableOpacity>
+                <View style={styles.pickerLabel}>
+                  <Text style={{ textAlign: "right" }}>
+                    {Moment(spentAt).format("DD MMMM YYYY")}
+                  </Text>
+                </View>
+              </View>
               <View style={styles.gap}></View>
               <CustomButton
-                text="Add Wallet"
+                text="Add Transaction"
                 type="PRIMARY"
                 isLoading={loading}
                 onPress={handleSubmit}
               />
             </View>
           </View>
+          {/* <CustomDatePicker
+            isOpen={openDatePicker}
+            setOpen={toggleDatePicker}
+            onChange={onTimeChange}
+            date={date}
+          /> */}
+          <Modal
+            style={styles.modalWrapper}
+            isVisible={openDatePicker}
+            onBackdropPress={toggleDatePicker}
+          >
+            <View style={styles.picker}>
+              <DateTimePicker
+                mode="date"
+                value={spentAt}
+                is24Hour
+                display={Platform.OS === "android" ? "default" : "spinner"}
+                onChange={onTimeChange}
+                textColor="dark"
+                style={{
+                  display: openDatePicker ? "flex" : "none",
+                }}
+              />
+              <View style={styles.gap} />
+              <CustomButton
+                text="Select Date"
+                type="PRIMARY"
+                onPress={() => setOpenDatePicker(!openDatePicker)}
+              />
+            </View>
+          </Modal>
         </Modal>
       </View>
     </View>
@@ -357,6 +438,33 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 5,
     marginVertical: 5,
+  },
+
+  pickerContainer: {
+    backgroundColor: "#FFF",
+    width: "100%",
+    flexDirection: "row",
+
+    borderColor: "#e8e8e8",
+    borderWidth: 1,
+    borderRadius: 5,
+
+    paddingHorizontal: 13,
+    marginVertical: 5,
+  },
+  pickerLabel: {
+    paddingVertical: Platform.OS === "ios" ? 13 : 9,
+    width: "50%",
+  },
+  picker: {
+    backgroundColor: "#F7F4F2",
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+    maxHeight: 500,
+
+    width: "100%",
+    padding: 10,
+    paddingVertical: 50,
   },
 });
 

@@ -20,7 +20,7 @@ const LinearProgress = ({ value }) => {
 
   const startProgressBar = () => {
     Animated.timing(animation, {
-      toValue: value,
+      toValue: value > 100 ? 100 : value,
       duration: 1000,
       useNativeDriver: false,
     }).start();
@@ -41,6 +41,8 @@ const LinearProgress = ({ value }) => {
           width: progressValue,
           backgroundColor: value > 0 ? bgColor : null,
           padding: 20,
+          borderTopRightRadius: value > 99 ? 5 : 0,
+          borderBottomRightRadius: value > 99 ? 5 : 0,
         }}
       >
         <Text

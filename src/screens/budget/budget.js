@@ -98,7 +98,7 @@ const BudgetScreen = ({ navigation }) => {
                     <View>
                       <Text style={styles.budgetName}>{b.name}</Text>
                       <Text style={styles.budgetLeftOut}>
-                        left out IDR {b.left_out}
+                        left out IDR {b.left_out.toLocaleString()}
                       </Text>
                     </View>
                     <View style={styles.budgetAmountWrapper}>
@@ -108,8 +108,7 @@ const BudgetScreen = ({ navigation }) => {
                     </View>
                   </View>
                   <View>
-                    {/* TODO: Will change value if transaction api is ready */}
-                    <LinearProgress value={Math.floor(Math.random() * 101)} />
+                    <LinearProgress value={Math.floor(b.progress)} />
                   </View>
                 </View>
               );
