@@ -3,6 +3,7 @@ import {
   Button,
   Dimensions,
   Keyboard,
+  Platform,
   ScrollView,
   StyleSheet,
   Text,
@@ -88,6 +89,7 @@ const TransactionScreen = ({ navigation }) => {
 
     if (event.type === "set") {
       setSpentAt(newTime);
+      return;
     }
 
     if (event.type === "neutralButtonPressed") {
@@ -292,31 +294,42 @@ const TransactionScreen = ({ navigation }) => {
             onChange={onTimeChange}
             date={date}
           /> */}
-          <Modal
-            style={styles.modalWrapper}
-            isVisible={openDatePicker}
-            onBackdropPress={toggleDatePicker}
-          >
-            <View style={styles.picker}>
-              <DateTimePicker
-                mode="date"
-                value={spentAt}
-                is24Hour
-                display={Platform.OS === "android" ? "default" : "spinner"}
-                onChange={onTimeChange}
-                textColor="dark"
-                style={{
-                  display: openDatePicker ? "flex" : "none",
-                }}
-              />
-              <View style={styles.gap} />
-              <CustomButton
-                text="Select Date"
-                type="PRIMARY"
-                onPress={() => setOpenDatePicker(!openDatePicker)}
-              />
-            </View>
-          </Modal>
+          {Platform.OS === "ios" ? (
+            <Modal
+              style={styles.modalWrapper}
+              isVisible={openDatePicker}
+              onBackdropPress={toggleDatePicker}
+            >
+              <View style={styles.picker}>
+                <DateTimePicker
+                  mode="date"
+                  value={spentAt}
+                  is24Hour
+                  display={Platform.OS === "android" ? "default" : "spinner"}
+                  onChange={onTimeChange}
+                  textColor="dark"
+                  style={{
+                    display: openDatePicker ? "flex" : "none",
+                  }}
+                />
+                <View style={styles.gap} />
+                <CustomButton
+                  text="Select Date"
+                  type="PRIMARY"
+                  onPress={() => setOpenDatePicker(!openDatePicker)}
+                />
+              </View>
+            </Modal>
+          ) : openDatePicker ? (
+            <DateTimePicker
+              mode="date"
+              value={spentAt}
+              is24Hour
+              display="default"
+              onChange={onTimeChange}
+              textColor="dark"
+            />
+          ) : null}
         </Modal>
       </View>
     </View>
@@ -453,7 +466,7 @@ const styles = StyleSheet.create({
     marginVertical: 5,
   },
   pickerLabel: {
-    paddingVertical: Platform.OS === "ios" ? 13 : 9,
+    paddingVertical: 13,
     width: "50%",
   },
   picker: {
